@@ -222,6 +222,37 @@ class Game {
       this.ctx.arc(mapX, mapY, 1, 0, Math.PI*2);
       this.ctx.fill();
     }
+
+    this.drawTextBox("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sollicitudin cursus risus vel ullamcorper. Nam a urna vel augue lobortis gravida. Nulla pharetra, tellus nec commodo porta, eros nibh commodo velit, vel gravida tortor magna id neque. Nullam nec mollis leo. Ut posuere enim diam, vitae aliquam erat mollis vel. Donec vulputate mi ac interdum venenatis. Proin vitae velit ac ipsum laoreet commodo et eget lectus. Aenean ac porta velit, id commodo enim. Phasellus sit amet libero et felis interdum pretium. Aenean accumsan risus quis nulla tristique dapibus. Nulla ultricies, nibh at porta pharetra, metus risus commodo nunc, id tincidunt diam risus id ligula. Nulla eu tempus ante, at malesuada nunc.", 0, 0, 200, 200);
+  }
+  drawTextBox(text, x, y, width, height, page=1) {
+    let padding = 10;
+    let lineSpacing = 20;
+    let linesPerPage = height/lineSpacing - 1
+    let words = text.split(" ");
+    let currentLineLength = 0;
+    let lines = [""];
+    words.forEach(w => {
+      let l = this.ctx.measureText(" "+w).width;
+      currentLineLength += l;
+      if(currentLineLength >= width-2*padding) {
+        currentLineLength = l;
+        lines.push(w);
+      } else {
+        lines[lines.length-1] += " "+w;
+      }
+    });
+    this.ctx.rect(x,y,width,height);
+    this.ctx.fillStyle = "#000";
+    this.ctx.fill();
+    this.ctx.strokeStyle = "#fff";
+    this.ctx.stroke();
+    this.ctx.fillStyle = "#fff";
+    for(let i=0; i<linesPerPage; i++) {
+      let l = lines[i+linesPerPage*page];
+      if(!l) break;
+      this.ctx.fillText(l, x+padding, y+lineSpacing+i*lineSpacing);
+    }
   }
   input(state, code) {
     let input = this.keyMap[code];
